@@ -1,0 +1,33 @@
+export const posts = [
+  {
+    id: 0,
+    username: "test",
+    userProfile: "#",
+    time: new Date("30, August, 2023 19:04:10"),
+    text: "What do you think of this site?",
+    img: ["https://cdn.pixabay.com/photo/2023/08/13/14/42/mountain-8187621_1280.jpg"],
+    hashtag: "random",
+    likes: [{ username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }, { username: "test" }],
+  },
+  {
+    id: 1,
+    username: "test",
+    userProfile: "#",
+    time: new Date("28, August, 2021 14:00:44"),
+    text: "Who is the best athlete ever?",
+    hashtag: "sports",
+    likes: [
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+      { username: "test" },
+    ],
+  },
+];
