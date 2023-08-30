@@ -70,15 +70,15 @@ const PostCard = ({ id, username, userProfile, time, text, img, likes = [], comm
   }, []);
 
   return (
-    <div className="p-6 rounded-xl w-1/2 bg-white" post-id={username + id}>
+    <div className="p-6 rounded-xl w-full bg-white shadow-lg" post-id={username + id}>
       {/* {JSON.stringify(props.data)} */}
       <div className="flex items-center">
         <div className="p-5 rounded-full bg-darkGrayishBlue"></div>
-        <Link to={userProfile} className="ml-4">
+        <Link to={userProfile} className="ml-4 font-medium">
           @{username}
         </Link>
-        <button className="ml-4 py-2 px-5 bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">Follow</button>
-        <p className="flex items-center ml-auto text-darkGrayishBlue font-light cursor-pointer">
+        <button className="ml-4 text-brightRed hover:text-brightRedLight rounded-lg text-sm font-semibold">Follow</button>
+        <p className="flex items-center ml-auto text-darkGrayishBlue text-xs font-light cursor-pointer">
           <AccessTimeIcon fontSize="small" className="mr-1" /> {postTime?.value}
           {postTime?.unit} ago
         </p>
@@ -108,18 +108,18 @@ const PostCard = ({ id, username, userProfile, time, text, img, likes = [], comm
 
       {showComments && (
         <div className="flex flex-col space-y-6 mt-6">
-          <p>Comments</p>
           <div className="flex space-x-4">
             <textarea className="border w-full rounded-xl px-6 py-4 resize-none" name="comment" placeholder="Leave a comment..."></textarea>
           </div>
           <div className="flex">
             <button className="ms-auto py-2 px-5 text-center bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">Comment</button>
           </div>
+          <p>Comments</p>
           {comments.map((c, i: number) => i <= 2 && <CommentCard {...(c as CommentData)} key={i} />)}
           {comments?.length > 3 && (
             <div className="flex">
-              <Link to={`post/${id}`} className="mx-auto py-2 px-5 text-center bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">
-                Show more
+              <Link to={`post/${id}`} className="mx-auto mt-10 py-2 px-5 text-center bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">
+                Show all comments
               </Link>
             </div>
           )}

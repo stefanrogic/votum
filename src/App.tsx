@@ -10,6 +10,11 @@ function App() {
     <>
       <Navbar />
       <Outlet />
+      <div className="sticky flex justify-end bottom-0 container mx-auto w-full">
+        <div className="flex justify-center w-1/5">
+          <button className=" text-1xl font-medium w-full h-12 bg-brightRed hover:bg-brightRedLight text-white shadow-lg rounded-t-lg ml-3">(1) Messages</button>
+        </div>
+      </div>
     </>
   );
 
