@@ -3,8 +3,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import CommentCard from "../commentCard/CommentCard";
 
 type PostData = {
   id: number;
@@ -18,9 +19,17 @@ type PostData = {
   hashtag?: string;
 };
 
-const PostCard = ({ id, username, userProfile, time, text, img, likes, comments, hashtag }: PostData) => {
-  const [liked, setLiked] = useState<boolean | null>(null);
+type TimeState = {
+  value: number;
+  unit: string;
+};
 
+type CommentData = {
+  username: string;
+  message: string;
+};
+
+const PostCard = ({ id, username, userProfile, time, text, img, likes = [], comments = [], hashtag }: PostData) => {
   const calculateTime = (postTime: Date) => {
     const seconds = 1000;
     const minute = seconds * 60;
@@ -49,20 +58,29 @@ const PostCard = ({ id, username, userProfile, time, text, img, likes, comments,
     if (diffDays >= 365) return { value: Math.trunc(diffDays / 365), unit: Math.trunc(diffDays / 365) > 1 ? " years" : " year" };
   };
 
-  const calculatedTime = calculateTime(time);
+  const [liked, setLiked] = useState<boolean | null>(null);
+  const [showComments, setShowComments] = useState<boolean>(false);
+  const [postTime, setPostTime] = useState(() => calculateTime(time) as TimeState);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPostTime(() => calculateTime(time) as TimeState);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="p-6 border rounded-xl w-1/2">
+    <div className="p-6 rounded-xl w-1/2 bg-white" post-id={username + id}>
       {/* {JSON.stringify(props.data)} */}
       <div className="flex items-center">
         <div className="p-5 rounded-full bg-darkGrayishBlue"></div>
         <Link to={userProfile} className="ml-4">
-          {username}
+          @{username}
         </Link>
-        <button className="ml-4 py-2 px-5 bg-blue-500 rounded-lg text-white text-sm font-semibold">Follow</button>
+        <button className="ml-4 py-2 px-5 bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">Follow</button>
         <p className="flex items-center ml-auto text-darkGrayishBlue font-light cursor-pointer">
-          <AccessTimeIcon fontSize="small" className="mr-1" /> {calculatedTime?.value}
-          {calculatedTime?.unit} ago
+          <AccessTimeIcon fontSize="small" className="mr-1" /> {postTime?.value}
+          {postTime?.unit} ago
         </p>
       </div>
       <p className="mt-5">{text}</p>
@@ -70,23 +88,43 @@ const PostCard = ({ id, username, userProfile, time, text, img, likes, comments,
       {img && (
         <div className="bg-darkGrayishBlue rounded-xl mt-5">
           {img.map((p, i) => (
-            <img className="object-cover cursor-pointer" src={p} alt="img" key={i} />
+            <img className="object-cover cursor-pointer rounded-xl" src={p} alt="img" key={i} />
           ))}
         </div>
       )}
 
       <div className="flex mt-5">
         <button className={`flex items-center space-x-4 ${liked && "text-red-500"}`} onClick={() => setLiked((prev) => !prev)}>
-          {liked ? <FavoriteIcon fontSize="small" className="mr-1" /> : <FavoriteBorderIcon fontSize="small" className="mr-1" />} {liked ? 16 : 15}
+          {liked ? <FavoriteIcon fontSize="small" className="mr-1" /> : <FavoriteBorderIcon fontSize="small" className="mr-1" />} {liked ? likes?.length + 1 : likes?.length}
         </button>
-        <button className="ml-5">
+        <button className="ml-5" onClick={() => setShowComments((prev) => !prev)}>
           <ChatBubbleOutlineIcon fontSize="small" className="mr-1" />
-          22
+          {comments?.length}
         </button>
         <div className="flex ml-auto">
-          <p className="text-blue-500 cursor-pointer">#sports</p>
+          <p className="text-brightRed hover:text-brightRedLight cursor-pointer">#{hashtag}</p>
         </div>
       </div>
+
+      {showComments && (
+        <div className="flex flex-col space-y-6 mt-6">
+          <p>Comments</p>
+          <div className="flex space-x-4">
+            <textarea className="border w-full rounded-xl px-6 py-4 resize-none" name="comment" placeholder="Leave a comment..."></textarea>
+          </div>
+          <div className="flex">
+            <button className="ms-auto py-2 px-5 text-center bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">Comment</button>
+          </div>
+          {comments.map((c, i: number) => i <= 2 && <CommentCard {...(c as CommentData)} key={i} />)}
+          {comments?.length > 3 && (
+            <div className="flex">
+              <Link to={`post/${id}`} className="mx-auto py-2 px-5 text-center bg-brightRed hover:bg-brightRedLight rounded-lg text-white text-sm font-semibold">
+                Show more
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

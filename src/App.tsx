@@ -23,7 +23,7 @@ function App() {
   );
 
   return (
-    <motion.div className="App flex flex-col h-screen" initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
+    <motion.div className="App bg-slate-50" initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
       <RouterProvider router={router} />
     </motion.div>
   );
